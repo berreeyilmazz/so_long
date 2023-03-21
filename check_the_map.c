@@ -6,7 +6,7 @@
 /*   By: havyilma <havyilma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 19:57:50 by havyilma          #+#    #+#             */
-/*   Updated: 2023/03/19 16:24:05 by havyilma         ###   ########.fr       */
+/*   Updated: 2023/03/21 01:43:29 by havyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,11 @@
 
 void	what_the_height(char *av, t_settings *map)
 {
-	int	fd;
-	int	i;
+	int		fd;
+	int		i;
 
 	i = 0;
 	fd = open(av, O_RDONLY);
-	printf("-*----%d",fd);
 	while(get_next_line(fd))
 		i++;
 	close(fd);
@@ -32,17 +31,18 @@ void	what_the_width(t_settings *set)
 	int	i;
 
 	i = 1;
-	size = ft_strlen(set->map[0]);
-	while(i < set->map_height)
+	size = ft_strlen(set->map[0]) - 1;
+	while(i < set->map_height - 2)
 	{
-		if(size != ft_strlen(set->map[i]))
+		if(size != ft_strlen(set->map[i]) - 1)
 			return;
 		i++;
 	}
-	if(i == set->map_height)
-		set->map_width = size - 1;
-	else
-		exit(6);
+	if(i == set->map_height - 2)
+		if(!(size != ft_strlen(set->map[i])))
+			return;
+	if(i == set->map_height - 2)
+		set->map_width = size;
 }
 
 void	ft_read_map(char *av, t_settings *set)

@@ -6,7 +6,7 @@
 /*   By: havyilma <havyilma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 18:57:21 by havyilma          #+#    #+#             */
-/*   Updated: 2023/03/19 16:36:36 by havyilma         ###   ########.fr       */
+/*   Updated: 2023/03/21 04:40:33 by havyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,39 +20,45 @@
 #include "./ft_printf/ft_printf.h"
 #include "./get_next_line/get_next_line.h"
 
-typedef struct *s_settings{
-	void	*mlx;
-	void	*window;
-	char	**map;
-	int		map_width;
-	int		map_height;
-	char	*path_p;
-	char	*path_e;
-	char	*path_c;
-	char	*path_1;
-	char	*path_0;
-	char	*img_0;
-	char	*img_1;
-	char	*img_p;
-	char	*img_e;
-	char	*img_c;
+typedef struct s_settings
+{
+	void *mlx;
+	void *window;
+	void *addr;
+	int bits_per_pixel;
+	int line_length;
+	int endian;
+	char **map;
+	void *img;
+	int map_width;
+	int map_height;
+	char *path_p;
+	char *path_e;
+	char *path_c;
+	char *path_1;
+	char *path_0;
+	void *img_0;
+	void *img_1;
+	void *img_p;
+	void *img_e;
+	void *img_c;
+	int	fill_x;
+	int	fill_y;
+} t_settings;
 
-
-}	*t_settings;
-
-void	ft_init(t_settings *set);
-int		ft_control_epc(t_settings *set, int i, int j, int check_e_p, int check_c);
-int		ft_check_edge(t_settings *set, int i, int j);
-int		ft_check_zero_one(t_settings *set, int i, int j);
-void	ft_read_map(char *av, t_settings *set);
-void	what_the_height(char *av, t_settings *map);
-void	what_the_width(t_settings *map);
-int		ft_check_zero_one(t_settings *set, int i, int j);
-int		ft_check_map(t_settings *set, char *av1);
-void	ft_data(t_settings *map, int i, int j);
-void 	ft_fill_img_path(t_settings *map);
-
-
-
-
+void ft_init(t_settings *set);
+int ft_control_epc(t_settings *set, int i, int j, int check_e_p, int check_c);
+int ft_check_edge(t_settings *set, int i, int j);
+int ft_check_zero_one(t_settings *set, int i, int j);
+void ft_read_map(char *av, t_settings *set);
+void what_the_height(char *av, t_settings *map);
+void what_the_width(t_settings *map);
+int ft_check_zero_one(t_settings *set, int i, int j);
+int ft_check_map(t_settings *set, char *av1);
+void ft_data(t_settings *map, int i, int j);
+void ft_fill_img_path(t_settings *map);
+int is_char_valid(char c);
+void print_map_as_ascii(t_settings *map);
+int key_handler(int key, t_settings *set);
+void hook_key(int key, t_settings *set);
 #endif

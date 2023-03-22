@@ -29,8 +29,12 @@ void ft_init(t_settings *set)
 	set->img_p = 0;
 	set->img_e = 0;
 	set->img_c = 0;
-	set->fill_x = 0;
-	set->fill_y = 0;
+	set->pr_pos_x = 0;
+	set->pr_pos_y = 0;
+	set->count_coll = 0;
+	set->check_coll = 0;
+	set->player_pos_y = 0;
+	set->player_pos_x = 0;
 }
 
 void print_map_as_ascii(t_settings *map)
@@ -39,14 +43,15 @@ void print_map_as_ascii(t_settings *map)
 	int j;
 
 	i = 0;
-	while(map->map[i])
+	while(i < map->map_height)
 	{
-		j = -1;
-		while (map->map[i][++j])
+		j = 0;
+		while (j < map->map_width)
 		{
-			printf("%i-",map->map[i][j]);
-			if (map->map[i][j] == 10)
+			printf("%i-",map->img_ch[i][j]);
+			if (map->img_ch[i][j] == 10)
 				printf("\n");
+			j++;
 		}
 		i++;
 	}
@@ -57,70 +62,65 @@ void ft_fill_img_path(t_settings *map)
 	int sz;
 
 	sz = 64;
-	map->path_0 = "./pictures/background.xpm";
-	map->img_0 = mlx_xpm_file_to_image(map->mlx, map->path_0, &sz, &sz);
-	map->path_1 = "./pictures/cat.xpm";
-	map->img_1 = mlx_xpm_file_to_image(map->mlx, map->path_1, &sz, &sz);
+	map->path_0 = "./pictures/unknown.xpm";
+	map->path_1 = "./pictures/planks.xpm";
 	map->path_p = "./pictures/cat.xpm";
 	map->path_e = "./pictures/aqua.xpm";
 	map->path_c = "./pictures/orfish.xpm";
+	map->img_0 = mlx_xpm_file_to_image(map->mlx, map->path_0, &sz, &sz);
+	map->img_1 = mlx_xpm_file_to_image(map->mlx, map->path_1, &sz, &sz);
 	map->img_p = mlx_xpm_file_to_image(map->mlx, map->path_p, &sz, &sz);
 	map->img_e = mlx_xpm_file_to_image(map->mlx, map->path_e, &sz, &sz);
 	map->img_c = mlx_xpm_file_to_image(map->mlx, map->path_c, &sz, &sz);
 }
 
-void ft_data(t_settings *map, int i, int j)
+void	ft_print_p_e_c(t_settings *map, int c)
+{
+	mlx_put_image_to_window(map->mlx, map->window, map->img_0, map->pr_pos_x, map->pr_pos_y);
+	if(c == 'P')
+		mlx_put_image_to_window(map->mlx, map->window, map->img_p, map->pr_pos_x, map->pr_pos_y);
+	if(c == 'E')
+		mlx_put_image_to_window(map->mlx, map->window, map->img_e, map->pr_pos_x, map->pr_pos_y);
+	if(c == 'C')
+		mlx_put_image_to_window(map->mlx, map->window, map->img_c, map->pr_pos_x, map->pr_pos_y);
+}
+
+
+void	ft_print_wall_space(t_settings *map, int c)
+{
+	if(c == '1')
+		mlx_put_image_to_window(map->mlx, map->window, map->img_1, map->pr_pos_x, map->pr_pos_y);
+	if(c == '0')
+		mlx_put_image_to_window(map->mlx, map->window, map->img_0, map->pr_pos_x, map->pr_pos_y);
+}
+
+
+
+void ft_int_dealer(t_settings *map, int i, int j, int c)
 {
 	ft_fill_img_path(map);
-	int c;
-
-	i = 0;
 	while (i < map->map_height)
 	{
 		j = 0;
-		while (j < map->map_width + 2)
+		while (j <= map->map_width + 1)
 		{
-			c = map->map[i][j];
-			if (is_char_valid(c))
+			c = map->img_ch[i][j++];
+			if (c == '0' || c == '1' || c == 'P' || c == 'E' || c == 'C')
 			{
-				printf("c:%i\n",c);
-				if (c == '1')
-				{
-					mlx_put_image_to_window(map->mlx, map->window, map->img_1, map->fill_x, map->fill_y);
-					map->fill_x += 64;
-				}
-				else if (c == 'C')
-				{
-					mlx_put_image_to_window(map->mlx, map->window, map->img_c, map->fill_x, map->fill_y);
-					map->fill_x += 64;
-				}
-				else if (c == 'P')
-				{
-					mlx_put_image_to_window(map->mlx, map->window, map->img_p, map->fill_x, map->fill_y);
-					map->fill_x += 64;
-				}
-				else if (c == 'E')
-				{
-					mlx_put_image_to_window(map->mlx, map->window, map->img_e, map->fill_x, map->fill_y);
-					map->fill_x += 64;
-				}
-				else if (c == 10)
-				{
-					map->fill_x = 0;
-					map->fill_y += 64;
-				}
-				else // 0 gelirse
-				{
-					map->fill_x += 64;
-				}
+				if (c == '1' || c == '0')
+					ft_print_wall_space(map, c);
+				else if (c == 'P' || c == 'E' || c == 'C' )
+					ft_print_p_e_c(map, c);	
+				map->pr_pos_x += 64;
 			}
-			j++;
+			else if(c == '\n')
+			{
+				map->pr_pos_x = 0;
+				map->pr_pos_y += 64;
+
+			}
 		}
 		i++;
 	}
 }
 
-int is_char_valid(char c)
-{
-	return (c == '0' || c == '1' || c == 'P' || c == 'C' || c == 'E' || c == '\n');
-}

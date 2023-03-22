@@ -49,10 +49,8 @@ void	ft_read_map(char *av, t_settings *set)
 {
 	int	i;
 	int	fd;
-	int	ctrl;
 
 	i = 0;
-	ctrl = 0;
 	set->map = calloc(set->map_height + 1, sizeof(char*));
 	fd = open(av, O_RDONLY);
 	while (i < set->map_height)
@@ -61,6 +59,7 @@ void	ft_read_map(char *av, t_settings *set)
 		i++;
 	}
 	close(fd);
+	set->img_ch = set->map;
 
 }
 
@@ -86,6 +85,7 @@ int	ft_control_epc(t_settings *set, int i, int j, int check_e_p, int check_c)
 	}
 	if (check_e_p != 2 || check_c == 0)
 		return (0);
+	set->count_coll = check_c;
 	return (1);
 }
 

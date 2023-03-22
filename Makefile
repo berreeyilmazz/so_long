@@ -16,7 +16,7 @@ MLX = ./minilibx/libmlx.a
 LIBFT = -I./libft
 GNL = ./get_next_line/get_next_line.c ./get_next_line/get_next_line_utils.c
 GNLOBJS = $(GNL:.c=.o)
-SRCS = check_the_map.c main.c put_png.c  
+SRCS = check_the_map.c main.c put_xpm.c  
 OBJS = $(SRCS:.c=.o)
 NAME = so_long
 

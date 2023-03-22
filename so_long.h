@@ -42,8 +42,14 @@ typedef struct s_settings
 	void *img_p;
 	void *img_e;
 	void *img_c;
-	int	fill_x;
-	int	fill_y;
+	int	pr_pos_x;
+	int	pr_pos_y;
+	int	count_coll;
+	int check_coll;
+	char	**img_ch;
+	int		player_pos_x;
+	int		player_pos_y;
+
 } t_settings;
 
 void ft_init(t_settings *set);
@@ -55,10 +61,11 @@ void what_the_height(char *av, t_settings *map);
 void what_the_width(t_settings *map);
 int ft_check_zero_one(t_settings *set, int i, int j);
 int ft_check_map(t_settings *set, char *av1);
-void ft_data(t_settings *map, int i, int j);
+void ft_int_dealer(t_settings *map, int i, int j, int c);
 void ft_fill_img_path(t_settings *map);
-int is_char_valid(char c);
 void print_map_as_ascii(t_settings *map);
 int key_handler(int key, t_settings *set);
 void hook_key(int key, t_settings *set);
+void	ft_where_is_she(t_settings *set, int i, int j);
+
 #endif

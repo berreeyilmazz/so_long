@@ -49,7 +49,6 @@ int ft_check_map(t_settings *set, char *av1)
 		printf("Wrong position of P, E or C!");
 		return (0);
 	}
-	// printf("==h=%d\n==w=%d\n", set->map_height,set->map_width);
 	return (1);
 }
 
@@ -64,8 +63,10 @@ int main(int ac, char **av)
 	set.window = mlx_new_window(set.mlx, 64 * (set.map_width), 64 * set.map_height, "so_long");
 	set.img = mlx_new_image(set.mlx, 64 * (set.map_width), 64 * set.map_height);
 	set.addr = mlx_get_data_addr(set.img, &set.bits_per_pixel, &set.line_length, &set.endian);
-	ft_data(&set, 0, 0);
+	ft_int_dealer(&set, 0, 0, 0);
+	print_map_as_ascii(&set);
 	mlx_hook(set.window, 2, 1L << 0, key_handler, &set);
+	//mlx_hook(set.window, );
 	mlx_loop(set.mlx);
 	return (0);
 }
@@ -73,17 +74,18 @@ int main(int ac, char **av)
 int key_handler(int key, t_settings *set)
 {
 	(void)set;
-	//printf("%d\n",key);
+	printf("***%d\n", key);
 	hook_key(key, set);
 	return (0);
 }
 
 void hook_key(int key, t_settings *set)
 {
-	(void)set;
-
-	if (key == 13)
+	ft_where_is_she(set, -1, -1);
+	if (key == 13 || key == 126 )
+	{	
 		printf("yukari\n");
+	}
 	else if (key == 0)
 		printf("sol\n");
 	else if (key == 1)
@@ -91,3 +93,44 @@ void hook_key(int key, t_settings *set)
 	else if (key == 2)
 		printf("sag\n");
 }
+
+void	ft_where_is_she(t_settings *set, int i, int j)
+{
+	while (++i < set->map_height)
+	{
+		while (++j < set->map_width - 1)
+		{
+			if(set->img_ch[i][j] == 'P')
+			{
+				set->player_pos_x = j;
+				set->player_pos_y = i;
+			}
+		}
+		j = 1;
+	}
+	//printf("...%d....%d\n",set->player_pos_x, set->player_pos_y);
+}
+
+
+/*void	ft_up(t_settings *set, int up, int i, int j)
+{
+	while (++i < set->map_height)
+	{
+		while (++j < set->map_width)
+		{
+			if (set->map[i][j] == '0')
+			{
+				
+			}
+			
+			else if (set->map[i][j] == 'C')
+
+				set->count_coll
+
+			else if (set->map[i][j] == 'E')
+				set->check_coll 
+
+		}
+
+	}
+}*/

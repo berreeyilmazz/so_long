@@ -6,7 +6,7 @@
 /*   By: havyilma <havyilma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 19:57:50 by havyilma          #+#    #+#             */
-/*   Updated: 2023/03/21 01:43:29 by havyilma         ###   ########.fr       */
+/*   Updated: 2023/03/23 02:57:24 by havyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,19 @@ void	what_the_height(char *av, t_settings *map)
 {
 	int		fd;
 	int		i;
+	char	*temp;
 
 	i = 0;
 	fd = open(av, O_RDONLY);
-	while(get_next_line(fd))
+	temp = get_next_line(fd);
+	while(temp)
+	{
+		free(temp);
+		temp = get_next_line(fd);
 		i++;
+	}
 	close(fd);
-	map->map_height = i ;
+	map->map_height = i;
 }
 
 void	what_the_width(t_settings *set)
@@ -44,6 +50,22 @@ void	what_the_width(t_settings *set)
 	if(i == set->map_height - 2)
 		set->map_width = size;
 }
+void	ft_copy_map(char *av, t_settings *set)
+{
+	int	i;
+	int	fd;
+
+	i = 0;
+	set->img_ch = malloc((set->map_height + 1) * sizeof(char*));
+	fd = open(av, O_RDONLY);
+	while (i < set->map_height)
+	{
+		set->img_ch[i] = get_next_line(fd);
+		i++;
+	}
+	set->img_ch[i] = NULL;
+	close(fd);
+}
 
 void	ft_read_map(char *av, t_settings *set)
 {
@@ -51,16 +73,16 @@ void	ft_read_map(char *av, t_settings *set)
 	int	fd;
 
 	i = 0;
-	set->map = calloc(set->map_height + 1, sizeof(char*));
+	set->map = malloc((set->map_height + 1) * sizeof(char*));
 	fd = open(av, O_RDONLY);
 	while (i < set->map_height)
 	{
 		set->map[i] = get_next_line(fd);
 		i++;
 	}
+	set->map[i] = NULL;
 	close(fd);
 	set->img_ch = set->map;
-
 }
 
 int	ft_control_epc(t_settings *set, int i, int j, int check_e_p, int check_c)
@@ -85,7 +107,7 @@ int	ft_control_epc(t_settings *set, int i, int j, int check_e_p, int check_c)
 	}
 	if (check_e_p != 2 || check_c == 0)
 		return (0);
-	set->count_coll = check_c;
+	set->check_coll = check_c;
 	return (1);
 }
 

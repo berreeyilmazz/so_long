@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   put_png.c                                          :+:      :+:    :+:   */
+/*   put_xpm.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: havyilma <havyilma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/19 11:54:02 by havyilma          #+#    #+#             */
-/*   Updated: 2023/03/21 04:45:24 by havyilma         ###   ########.fr       */
+/*   Updated: 2023/03/23 05:01:41 by havyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,26 +35,8 @@ void ft_init(t_settings *set)
 	set->check_coll = 0;
 	set->player_pos_y = 0;
 	set->player_pos_x = 0;
-}
-
-void print_map_as_ascii(t_settings *map)
-{
-	int i;
-	int j;
-
-	i = 0;
-	while(i < map->map_height)
-	{
-		j = 0;
-		while (j < map->map_width)
-		{
-			printf("%i-",map->img_ch[i][j]);
-			if (map->img_ch[i][j] == 10)
-				printf("\n");
-			j++;
-		}
-		i++;
-	}
+	set->move = 0;
+	set->c_move = (char *)malloc(sizeof(char) * 1);
 }
 
 void ft_fill_img_path(t_settings *map)
@@ -85,7 +67,6 @@ void	ft_print_p_e_c(t_settings *map, int c)
 		mlx_put_image_to_window(map->mlx, map->window, map->img_c, map->pr_pos_x, map->pr_pos_y);
 }
 
-
 void	ft_print_wall_space(t_settings *map, int c)
 {
 	if(c == '1')
@@ -94,14 +75,11 @@ void	ft_print_wall_space(t_settings *map, int c)
 		mlx_put_image_to_window(map->mlx, map->window, map->img_0, map->pr_pos_x, map->pr_pos_y);
 }
 
-
-
 void ft_int_dealer(t_settings *map, int i, int j, int c)
 {
-	ft_fill_img_path(map);
+
 	while (i < map->map_height)
 	{
-		j = 0;
 		while (j <= map->map_width + 1)
 		{
 			c = map->img_ch[i][j++];
@@ -110,17 +88,16 @@ void ft_int_dealer(t_settings *map, int i, int j, int c)
 				if (c == '1' || c == '0')
 					ft_print_wall_space(map, c);
 				else if (c == 'P' || c == 'E' || c == 'C' )
-					ft_print_p_e_c(map, c);	
+					ft_print_p_e_c(map, c);
 				map->pr_pos_x += 64;
 			}
 			else if(c == '\n')
 			{
 				map->pr_pos_x = 0;
 				map->pr_pos_y += 64;
-
 			}
 		}
+		j = 0;
 		i++;
 	}
 }
-
